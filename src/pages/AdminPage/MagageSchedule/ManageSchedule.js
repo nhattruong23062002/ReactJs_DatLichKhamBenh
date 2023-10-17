@@ -100,7 +100,7 @@ const ManageSchedule = () => {
       if (activeTimes && activeTimes.length > 0) {
         activeTimes.map((time) => {
           let object = {};
-          object.doctorId = role === 'R2' ? doctorId : selectedOption.value;
+          object.doctorId = role === 'R1'? selectedOption.value : doctorId;
           object.date = formattedStartDate;
           object.timeType = time;
           object.maxNumber = 10;
@@ -110,7 +110,7 @@ const ManageSchedule = () => {
       
       const response = await axios.post("http://localhost:3333/schedule", {
         result,
-        doctorId: role === 'R2' ? doctorId : selectedOption.value,
+        doctorId: role === 'R1'? selectedOption.value : doctorId,
         date: formattedStartDate,
       });
       console.log("««««« response.data.payload »»»»»", response.data.payload);
@@ -128,7 +128,17 @@ const ManageSchedule = () => {
     <div className="container">
       <h2 className="doctor-title">Quản lý kế hoạch khám bệnh cho bác sĩ</h2>
       <div className="schedule-wrapTop ">
-        {role && role === "R2" ? (
+        {role && role === 'R1' ? (
+        <>
+          <div className="schedule-name">
+            <h6>Chọn bác sĩ</h6>
+            <Select
+              defaultValue={selectedOption}
+              onChange={setSelectedOption}
+              options={options}
+              className="schedule-select-doctor"
+            />
+          </div>
           <div className="schedule-date">
             <h6>Chọn ngày</h6>
             <DatePicker
@@ -138,18 +148,9 @@ const ManageSchedule = () => {
               onChange={(date) => setStartDate(date)}
             />
           </div>
+          </>       
         ):(
-          <>
-        <div className="schedule-name">
-          <h6>Chọn bác sĩ</h6>
-          <Select
-            defaultValue={selectedOption}
-            onChange={setSelectedOption}
-            options={options}
-            className="schedule-select-doctor"
-          />
-        </div>
-        <div className="schedule-date">
+          <div className="schedule-date">
           <h6>Chọn ngày</h6>
           <DatePicker
             className="datepicker"
@@ -158,7 +159,6 @@ const ManageSchedule = () => {
             onChange={(date) => setStartDate(date)}
           />
         </div>
-          </>        
         )}
       </div>
       <div className="schedule-wrapBottom">

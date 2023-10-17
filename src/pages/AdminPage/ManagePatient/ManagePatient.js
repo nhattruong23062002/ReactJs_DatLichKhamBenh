@@ -6,19 +6,72 @@ import axios from "axios";
 // Import PrimeReact CSS in your React component
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
+import ModalConfirm from "./ModelConfirm";
+import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
+import jwt_decode from "jwt-decode";
 
 const ManagePatient = () => {
   const [booking, setBooking] = useState("");
   const [startDate, setStartDate] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [fileName, setFileName] = useState(null);
+  const [doctorId, setDoctorId] = useState(null);
+  
 
   startDate.setHours(0, 0, 0, 0);
   const formattedStartDate = new Date(startDate).getTime();
+
+  useEffect(() => {
+    const token = getTokenFromLocalStorage();
+    if (token) {
+      try {
+        // Giải mã token để lấy thông tin customerId
+        const decodedToken = jwt_decode(token);
+        const {id:id} = decodedToken;
+        setDoctorId(id)
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
+
+  // Hàm này được gọi để cập nhật fileName từ ModalConfirm
+  const handleFileNameChange = (newFileName) => {
+    setFileName(newFileName);
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleSend = async (rowData) => {
+    try {
+      modalConfirmRef.current.handleUploadAvatar();
+
+      const response = await axios.patch(
+        `http://localhost:3333/booking/${rowData.id}`,
+        {
+          statusId: 'S3',
+          fileName
+        }
+      );
+      setIsModalOpen(false);
+      getAllBooking();
+      setFileName('');
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleCancelModal = () => {
+    setIsModalOpen(false);
+  };
 
 
   const getAllBooking = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3333/booking?patientId=50&date=${formattedStartDate}`
+        `http://localhost:3333/booking?doctorId=${doctorId}&date=${formattedStartDate}`
       );
       setBooking(response.data.payload);
     } catch (error) {
@@ -26,11 +79,27 @@ const ManagePatient = () => {
     }
   };
 
+  const handleCancelBooking = async (rowData) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:3333/booking/${rowData.id}`,
+        {
+          statusId: 'S4'
+        }
+      );
+      alert("Lịch hẹn đã được hủy");
+      getAllBooking();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   useEffect(() => {
     getAllBooking();
   }, [formattedStartDate]);
 
-  console.log("««««« doctor »»»»»", booking);
+  const modalConfirmRef = React.createRef();
+
   return (
     <div className="">
       <h2 className="doctor-title">Quản lý lịch khám của bệnh nhân</h2>
@@ -44,19 +113,21 @@ const ManagePatient = () => {
           />
         </div>
       </div>
-      <div className="card" style={{ textAlign: "center",paddingLeft:"10px"  }}>
+      <div
+        className="card"
+        style={{ textAlign: "center", paddingLeft: "10px" }}
+      >
         <DataTable
           value={booking}
           paginator
           rows={5}
           rowsPerPageOptions={[5, 10, 25, 50]}
-          tableStyle={{ minWidth: "50rem"}}
+          tableStyle={{ minWidth: "50rem" }}
         >
           <Column
             field="id"
             header="ID"
             style={{ width: "10%" }}
-           /*  body={(rowData, rowIndex) => (rowIndex + 1)} */
           />
           <Column
             field="timeTypeDataPatient.valueVi"
@@ -82,20 +153,30 @@ const ManagePatient = () => {
             style={{ width: "20%" }}
           ></Column>
           <Column
-            field="patientData.address"
+            field="id"
             header="Action"
             style={{ width: "20%" }}
             body={(rowData) => (
               <div className="btn-manage-patient">
                 <button
-                  className="btn-confirm" /* onClick={() => handleButton1Click(rowData)} */
+                  onClick={showModal}
+                  className="btn-confirm"
                 >
                   Xác nhận
                 </button>
+                <ModalConfirm
+                  isModalOpen={isModalOpen}
+                  handleSend={() => handleSend(rowData)}
+                  handleCancelModal={handleCancelModal}
+                  rowData={rowData}
+                  onFileNameChange={handleFileNameChange}
+                  ref={modalConfirmRef}
+                />
                 <button
-                  className="btn-send" /*  onClick={() => handleButton2Click(rowData)} */
+                  className="btn-cancel"
+                  onClick={() => handleCancelBooking(rowData)}
                 >
-                  Gửi hóa đơn
+                  Từ chối
                 </button>
               </div>
             )}

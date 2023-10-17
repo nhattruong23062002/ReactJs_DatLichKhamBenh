@@ -27,7 +27,7 @@ const OutstandingDoctor = () => {
 useEffect(() => {
   getAllUser();
 }, []);
-
+console.log('««««« user »»»»»', user);
 
 const handleDoctorDetail = async (id) => {
     navigate(`/detail-doctor/${id}`);
@@ -56,7 +56,7 @@ const handleDoctorDetail = async (id) => {
             <img src={`http://localhost:3333/${p.image}`}/>
             <div className="info-doctor">
             <h3>{p.positionData.valueVi} {p.firstName} {p.lastName}</h3>
-            <p>Sức khỏe tâm thần- Tư vấn, trị liệu Tâm lý</p>
+            <p>{p.Doctor_Infor.specialtyData.name}</p>
             </div>
             </div>
           </div>

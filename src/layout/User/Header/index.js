@@ -46,7 +46,7 @@ const Header = () => {
   const handleLogout = () => {
     if (role === 'R3') {
       removeTokenFromLocalStorage();
-      navigate("/");
+      window.location.reload();
     }
   };
 
@@ -55,7 +55,9 @@ const Header = () => {
       <div className="home-header-content container">
         <div className="left-content">
           <FiMenu className="menu-homepage" />
-          <div className="header-logo"></div>
+          <div className="header-logo">
+            <img src="https://webadmin.beeart.vn/upload/image/20220519/6378855412618721664506097.png"/>
+          </div>
         </div>
         <div className="center-content">
           <div className="child-content">

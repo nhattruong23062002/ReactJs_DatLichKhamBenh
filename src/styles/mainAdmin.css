@@ -859,17 +859,35 @@ fieldset:disabled a.btn {
 
 /*Manage patient*/
 .btn-manage-patient .btn-confirm{
-  background-color: #f58b01;
+  background-color: #10c500;
   padding: 5px 10px;
   border: none;
   cursor: pointer;
   border-radius: 5px;
   margin-right: 10px;
 }
-.btn-manage-patient .btn-send{
-  background-color: #00d150;
+.btn-manage-patient .btn-cancel{
+  background-color: #d40000;
   padding: 5px 10px;
   border: none;
   cursor: pointer;
   border-radius: 5px;
+}
+
+.wrap-modal-confirm{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.wrap-modal-confirm .email-confirm{
+  flex: 2;
+}
+.email-confirm p{
+  margin-bottom: 10px;
+}
+.wrap-modal-confirm .invoice-confirm{
+  flex: 1;
+}
+.invoice-confirm p{
+  margin-bottom: 10px;
 }

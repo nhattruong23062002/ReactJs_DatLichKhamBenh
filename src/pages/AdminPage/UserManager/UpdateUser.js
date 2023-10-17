@@ -24,9 +24,8 @@ const UpdateUser = ({
 }) => {
   return (
     <Modal open={isModalOpen} onOk={handleSubmitUpdate} onCancel={handleCancelModal}>
-      <div className="">
-        <form className="" >
-          <div className="">
+        <form>
+          <div >
             <div className="row">
               <div className="form-group  col-md-12">
                 <span className="thong-tin-thanh-toan">
@@ -137,7 +136,6 @@ const UpdateUser = ({
             </div>
           </div>
         </form>
-      </div>
     </Modal>
   );
 };

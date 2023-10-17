@@ -112,13 +112,14 @@ const LoginForm = () => {
 
   const handleSignUp = async () => {
     try {
-      const response = await axios.post("/user/customers", {
+      const response = await axios.post("http://localhost:3333/users", {
         firstName,
         lastName,
         phoneNumber,
         email,
         address,
         password,
+        roleId: 'R3'
       });
 
       if (response.data.payload) {

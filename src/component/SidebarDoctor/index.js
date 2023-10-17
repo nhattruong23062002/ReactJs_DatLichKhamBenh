@@ -21,13 +21,13 @@ const SideBarDoctor = () => {
           <li>
             <NavLink to="/doctor/manage-schedule" className="active1">
               <AiOutlineDashboard className="icon-sidebar"/>
-              <span>Manage Schedule</span>
+              <span>Quản lý lịch trình</span>
             </NavLink>
           </li>
           <li>
             <NavLink to="/doctor/manage-patient" className="active1">
               <BsFillPeopleFill className="icon-sidebar"/>
-              <span>Manage Patient</span>
+              <span>Quản lý bệnh nhân</span>
             </NavLink>
           </li>
           <li>

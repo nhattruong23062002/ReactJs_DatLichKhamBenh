@@ -34,19 +34,19 @@ const SideBar = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/doctor/manage-schedule" className="active1">
-              <BsFillPeopleFill className="icon-sidebar"/>
-              <span>Manage Schedule</span>
-            </NavLink>
-          </li>
-          <li>
             <NavLink to="/admin/doctor-manage" className="active1">
               <FaUserDoctor className="icon-sidebar"/>
-              <span>Manage Doctor</span>
+              <span>Quản lý bác sĩ</span>
             </NavLink>
           </li>
           <li className="menu">
             <b>Orther</b>
+          </li>
+          <li>
+            <NavLink to="/doctor/manage-schedule" className="active1">
+              <BsFillPeopleFill className="icon-sidebar"/>
+              <span>Quản lý lịch trình</span>
+            </NavLink>
           </li>
           <li>
             <NavLink to="/admin/add-clinic" className="active1">

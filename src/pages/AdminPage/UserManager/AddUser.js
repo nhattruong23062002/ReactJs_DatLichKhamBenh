@@ -48,7 +48,7 @@ const AddUser = () => {
       return "P2";
     } else if (selectedPosition === "Phó giáo sư") {
       return "P3";
-    } else {
+    } else if (selectedPosition === "Giáo sư") {
       return "P4";
     }
   };

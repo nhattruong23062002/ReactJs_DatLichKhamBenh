@@ -3,14 +3,15 @@ import "./DoctorExtraInfor.scss";
 const DoctorExtraInfor = (doctor) => {
   const [isShow, setIsShow] = useState(false);
 
+
   return (
     <>
       {doctor.doctor  && (
         <div className="doctor-extra-infor-container">
           <div className="doctor-extra-infor-top">
             <h4>Địa chỉ khám</h4>
-            <p>{doctor.doctor.Doctor_Infor.nameClinic}</p>
-            <span>{doctor.doctor.Doctor_Infor.addressClinic}</span>
+            <p>{doctor.doctor.Doctor_Infor.clinicData.name}</p>
+            <span>{doctor.doctor.Doctor_Infor.clinicData.address}</span>
           </div>
           <div className="doctor-extra-infor-bottom">
             <span>Giá khám: {doctor.doctor.Doctor_Infor.priceData.valueVi}đ</span>

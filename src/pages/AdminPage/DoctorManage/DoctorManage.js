@@ -18,8 +18,6 @@ export default (props) => {
   const [selectedClinic, setSelectedClinic] = useState(null);
 
   const [show, setShow] = useState(null);
-  const [nameClinic, setNameClinic] = useState(null);
-  const [addressClinic, setAddressClinic] = useState(null);
   const [note, setNote] = useState(null);
   const [doctor, setDoctor] = useState("");
   const [price, setPrice] = useState("");
@@ -37,7 +35,7 @@ export default (props) => {
     setContentHTML(text);
     setContentMarkdown(html);
   }
-  console.log('««««« selectedSpecialty.id »»»»»', selectedSpecialty);
+
 
   const getAllSelect = async () => {
     try {
@@ -88,17 +86,22 @@ export default (props) => {
             setContentHTML(response.data.payload.Markdown.contentHTML);
           }
           setIntroduction(response.data.payload.Markdown.description);
-          setNameClinic(response.data.payload.Doctor_Infor.nameClinic)
-          setAddressClinic(response.data.payload.Doctor_Infor.addressClinic)
           setNote(response.data.payload.Doctor_Infor.note)
           setShow(response.data.payload.Markdown.contentHTML)
-          
+
+          setSelectedPrice(dataSelectPrice.filter((item) => item.value === response.data.payload.Doctor_Infor.priceId))
+          setSelectedPayment(dataSelectPayment.filter((item) => item.value === response.data.payload.Doctor_Infor.paymentId))
+          setSelectedProvince(dataProvince.filter((item) => item.value === response.data.payload.Doctor_Infor.provinceId))
+          setSelectedSpecialty(dataSpecialty.filter((item) => item.value === response.data.payload.Doctor_Infor.specialtyId))
+          setSelectedClinic(dataClinic.filter((item) => item.value === response.data.payload.Doctor_Infor.clinicId))
+
+
           console.log("««««« response,data.payload »»»»»",response.data.payload);
         } else {
           console.log("«««««Chờ chọn »»»»»");
         }
       } catch (error) {
-        console.error("Lỗi tìm kiếm sản phẩm:", error);
+        console.error("Lỗi:", error);
       }
     };
     getDetailDoctor(); // Gọi hàm ở đây
@@ -161,9 +164,8 @@ export default (props) => {
           priceId: selectedPrice.value,
           provinceId: selectedProvince.value,
           paymentId: selectedPayment.value,
-          addressClinic: addressClinic,
-          nameClinic: nameClinic,
           specialtyId: selectedSpecialty.value,
+          clinicId: selectedClinic.value,
           note: note,
         },
         {
@@ -173,6 +175,15 @@ export default (props) => {
         }
       );
       alert("Thêm mới thành công");
+      setSelectedOption('');
+      setSelectedPrice('');
+      setSelectedPayment('');
+      setSelectedProvince('');
+      setSelectedSpecialty('');
+      setSelectedClinic('');
+      setIntroduction('');
+      setContentHTML('');
+      setContentMarkdown('');
 
     } catch (error) {
       console.error("Error searching products:", error);
@@ -202,9 +213,8 @@ export default (props) => {
           priceId: selectedPrice.value,
           provinceId: selectedProvince.value,
           paymentId: selectedPayment.value,
-          addressClinic: addressClinic,
-          nameClinic: nameClinic,
           specialtyId: selectedSpecialty.value,
+          clinicId: selectedClinic.value,
           note: note,
         },
         {
@@ -215,6 +225,16 @@ export default (props) => {
       );
       console.log("««««« response.data.payload »»»»»", response1.data.payload);
       alert("Cập nhật thành công");
+      setSelectedOption('');
+      setSelectedPrice('');
+      setSelectedPayment('');
+      setSelectedProvince('');
+      setSelectedSpecialty('');
+      setSelectedClinic('');
+      setIntroduction('');
+      setContentHTML('');
+      setContentMarkdown('');
+      
     } catch (error) {
       console.error("Error searching products:", error);
     }
@@ -236,7 +256,7 @@ export default (props) => {
         <div className="content-doctor-right">
           <h6 className="control-label">Chọn bác sĩ</h6>
           <Select
-            defaultValue={selectedOption}
+            value={selectedOption}
             onChange={setSelectedOption}
             options={options}
             placeholder={"Chọn bác sĩ"}
@@ -249,6 +269,7 @@ export default (props) => {
           <label className="control-label">Chọn giá</label>
           <Select    
             onChange={setSelectedPrice}
+            value={selectedPrice}
             options={dataSelectPrice}
             placeholder={"Chọn giá"}
             className="select-doctor"
@@ -259,6 +280,7 @@ export default (props) => {
           <Select 
             onChange={setSelectedPayment}     
             options={dataSelectPayment}   
+            value={selectedPayment}
             placeholder={"Chọn phương thức thanh toán"}
             className="select-doctor"
           />
@@ -267,28 +289,18 @@ export default (props) => {
           <label className="control-label">Chọn tỉnh thành</label>
           <Select      
             onChange={setSelectedProvince}     
+            value={selectedProvince}
             options={dataProvince}
             placeholder={"Chọn tỉnh thành"}
             className="select-doctor"
           />
         </div>
         <div className="form-group col-md-4">
-          <label className="control-label">Tên phòng khám</label>
-          <input className="form-control" type="text" required value={nameClinic} onChange={(e) => setNameClinic(e.target.value)} />
-        </div>
-        <div className="form-group  col-md-4">
-          <label className="control-label">Địa chỉ phòng khám</label>
-          <input className="form-control" type="text" required value={addressClinic} onChange={(e) => setAddressClinic(e.target.value)}/>
-        </div>
-        <div className="form-group col-md-4">
-          <label className="control-label">Ghi chú</label>
-          <input className="form-control" type="text" required value={note} onChange={(e) => setNote(e.target.value)}/>
-        </div>
-        <div className="form-group col-md-4">
           <label className="control-label">Chọn chuyên khoa</label>
           <Select 
             onChange={setSelectedSpecialty}     
             options={dataSpecialty}   
+            value={selectedSpecialty}
             placeholder={"Chọn chuyên khoa"}
             className="select-doctor"
           />
@@ -298,9 +310,14 @@ export default (props) => {
           <Select      
             onChange={setSelectedClinic}     
             options={dataClinic}
+            value={selectedClinic}
             placeholder={"Chọn phòng khám"}
             className="select-doctor"
           />
+        </div>
+        <div className="form-group col-md-4">
+          <label className="control-label">Ghi chú</label>
+          <input className="form-control" type="text" required value={note} onChange={(e) => setNote(e.target.value)}/>
         </div>
       </form>
 
@@ -310,15 +327,15 @@ export default (props) => {
         value={contentHTML}
         onChange={handleEditorChange}
       />
-     {/*  {show !== null ? (
+      {show !== null ? (
          <button className="btn-manageDoctor" onClick={handleUpdateSubmit}>
          Chỉnh sửa
        </button>
       ) : (
-      )} */}
         <button className="btn-manageDoctor" onClick={handleSubmit}>
         Lưu lại
       </button>
+      )}
     </>
   );
 };
