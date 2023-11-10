@@ -14,7 +14,7 @@ const Specialty = () => {
     const getAllUser = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3333/specialty"
+          "http://localhost:3333/specialty?name="
         );
         setSpecialty(response.data.payload);
         console.log('««««« response.data.payload »»»»»', response.data.payload);
@@ -26,9 +26,6 @@ const Specialty = () => {
   }, []);
 
 
-const handleDoctorDetail = async (id) => {
-    navigate(`/detail-doctor/${id}`);
-};
   var settings = {
     dots: false,
     infinite: true,
@@ -42,6 +39,9 @@ const handleDoctorDetail = async (id) => {
   const handleSpecialtyDetail = async (id) => {
     navigate(`/detail-specialty/${id}`);
 };
+  const handleSpecialtyList = async (id) => {
+    navigate(`/specialty-list`);
+  };
 
 
   return (
@@ -49,7 +49,7 @@ const handleDoctorDetail = async (id) => {
       <div className="section-content container">
         <div className="section-header">
         <h2>Chuyên khoa phổ biến</h2>
-        <button>Xem thêm</button>
+        <button onClick={handleSpecialtyList}>Xem thêm</button>
         </div>
         <Slider {...settings}>
         {specialty && specialty.map((p) => (

@@ -14,10 +14,9 @@ const MedicalFacility = () => {
     const getAllClinic = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3333/clinic"
+          "http://localhost:3333/clinic?name="
         );
         setClinic(response.data.payload);
-        console.log('««««« response.data.payload »»»»»', response.data.payload);
       } catch (error) {
         console.error("Error searching products:", error);
       }
@@ -28,6 +27,10 @@ const MedicalFacility = () => {
   const handleClinicDetail = async (id) => {
     navigate(`/detail-clinic/${id}`);
 };
+  const handleClick = async (id) => {
+    navigate(`/clinic-list`);
+  };
+
 
   var settings = {
     dots: false,
@@ -43,7 +46,7 @@ const MedicalFacility = () => {
       <div className="section-content container">
         <div className="section-header">
         <h2>Cơ sở y tế nổi bật</h2>
-        <button>Tìm kiếm</button>
+        <button onClick={handleClick}>Tìm kiếm</button>
         </div>
         <Slider {...settings}>
         {clinic && clinic.map((c) => (

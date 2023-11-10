@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BsFillSearchHeartFill } from "react-icons/bs";
 import Specialty from "../../../component/Section/Specialty";
 import MedicalFacility from "../../../component/Section/MedicalFacility";
 import OutstandingDoctor from "../../../component/Section/OutstandingDoctor";
 import Handbook from "../../../component/Section/Handbook";
 import InformationVideo from "../../../component/InformationVideo";
+import { useNavigate } from 'react-router-dom';
+
 
 const HomePage = () => {
+  const [nameSpecialty, setNameSpecialty] = useState("");
+  const navigate = useNavigate();
+
+  const handleClick = async () => {
+    navigate(`/specialty-search?name=${nameSpecialty}`);
+  };
+
   return (
     <>
       <div className="home-baner">
@@ -14,8 +23,8 @@ const HomePage = () => {
           <div className="title1">NỀN TẢNG Y TẾ</div>
           <div className="title2">CHĂM SÓC SỨC KHỎE TOÀN DIỆN</div>
           <div className="search">
-            <BsFillSearchHeartFill className="icon-search" />
-            <input type="text" placeholder="Tìm kiếm chuyên khoa khám bệnh" />
+            <BsFillSearchHeartFill className="icon-search" onClick={handleClick}/>
+            <input type="text" placeholder="Tìm kiếm chuyên khoa khám bệnh" onChange={(e) => setNameSpecialty(e.target.value)}/>
           </div>
         </div>
         <div className="home-baner-down">

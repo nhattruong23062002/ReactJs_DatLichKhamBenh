@@ -160,10 +160,13 @@
     
             .icon-search{
                 margin: 0 5px;
+                font-size: 20px;
+                cursor: pointer;
             }
             input{
                 height: 25px;
                 width: 320px;
+                padding-left: 5px;
                 background: transparent;
                 border: none;
                 outline: none;
@@ -512,3 +515,87 @@
         }
     }
 }
+
+.specialty-list-content{
+    min-height: 700px;
+    padding-bottom: 30px;
+    .specialty-list-heading{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+        width: 100%;
+        h4{
+            flex: 3;
+        }
+        .input-search{
+            flex: 1;
+            width: 200px;
+        }
+    }
+    .specialty-item{
+        height:140px;
+        display: flex;
+        padding: 10px 0px;
+        border-bottom: 1px solid #ccc;
+        cursor: pointer;
+        img{
+            width: 220px;
+
+        }
+        p{
+            flex: 3;
+            margin-left: 20px;
+            font-size: 18px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+    }
+}
+
+
+.doctor-list-content{
+    min-height: 700px;
+    padding-bottom: 30px;
+    .doctor-list-heading{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+        width: 100%;
+        h4{
+            flex: 3;
+        }
+        .input-search{
+            flex: 1;
+            width: 200px;
+        }
+    }
+    .doctor-item{
+        height:140px;
+        display: flex;
+        padding: 10px 0px;
+        border-bottom: 1px solid #ccc;
+        cursor: pointer;
+        img{
+            width: 140px;
+
+        }
+        div{
+            flex: 3;
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            p{
+                font-size: 18px;
+                font-weight: 500;
+                margin-bottom: 5px;
+            }
+            span{
+                font-size: 16px;
+                font-weight: 400;
+            }
+        }
+    }
+}
+

@@ -17,6 +17,10 @@ import DetailSpecialty from "./pages/UserPage/DetailSpecialty/DetailSpecialty";
 import DetailClinic from "./pages/UserPage/DetailClinic/DetailClinic";
 import AddClinic from "./pages/AdminPage/ManageClinic/AddClinic";
 import ManagePatient from "./pages/AdminPage/ManagePatient/ManagePatient";
+import SpecialtyList from "./pages/UserPage/SpecialtyList";
+import ClinicList from "./pages/UserPage/ClinicList";
+import DoctorList from "./pages/UserPage/DoctorList";
+import SpecialtySearch from "./pages/UserPage/SpecialtySearch";
 
 function App() {
   return (
@@ -32,6 +36,10 @@ function App() {
           <Route path="/verify-booking" element={<VerifyBooking />} />
           <Route path="/detail-specialty/:id" element={<DetailSpecialty />} />
           <Route path="/detail-clinic/:id" element={<DetailClinic/>} />
+          <Route path="/specialty-list" element={<SpecialtyList/>} />
+          <Route path="/clinic-list" element={<ClinicList/>} />
+          <Route path="/doctor-list" element={<DoctorList/>} />
+          <Route path="/specialty-search" element={<SpecialtySearch/>} />
         </Route>
         <Route path="/admin" element={<LayoutAdmin />}>
           <Route path="/admin/user-manage" element={<UserManager />} />
