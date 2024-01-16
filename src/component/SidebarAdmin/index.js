@@ -49,13 +49,13 @@ const SideBar = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/admin/add-clinic" className="active1">
+            <NavLink to="/admin/clinic-manager" className="active1">
               <FaClinicMedical className="icon-sidebar"/>
               <span>Phòng khám</span>
             </NavLink>
           </li>
           <li>
-            <NavLink to="/admin/add-specialty" className="active1">
+            <NavLink to="/admin/specialty-manager" className="active1">
               <MdHomeRepairService className="icon-sidebar"/>
               <span>Chuyên khoa</span>
             </NavLink>

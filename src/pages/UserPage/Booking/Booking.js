@@ -3,17 +3,30 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Collapse } from "antd";
 import jwt_decode from "jwt-decode";
-import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
+import { getTokenFromLocalStorage,getIdUser } from "../../../utils/tokenUtils";
 import UpdateUser from "../../AdminPage/UserManager/UpdateUser";
+import ChangeInfor from "./ChangeInfor";
+import { useNavigate } from "react-router-dom";
+
 
 const Booking = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [show, setShow] = useState(false);
+
   const [doctor, setDoctor] = useState("");
   const [schedule, setSchedule] = useState("");
   const [patient, setPatient] = useState("");
   const [description, setDescription] = useState("");
+
   const { timeId } = useParams();
+  const navigate = useNavigate();
 
   const token = getTokenFromLocalStorage();
+  const IdUser = getIdUser();
   const date = new Date(schedule.date);
 
   // Lấy ngày tháng năm
@@ -62,16 +75,19 @@ const Booking = () => {
   }, [schedule]);
 
   useEffect(() => {
-    if (token) {
-      try {
-        // Giải mã token để lấy thông tin customerId
-        const decodedToken = jwt_decode(token);
-        setPatient(decodedToken);
-      } catch (error) {
-        console.error("Error decoding token:", error);
-      }
-    }
+    getPatient();
   }, []);
+
+  const getPatient = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3333/users/${IdUser}`
+      );
+      setPatient(response.data.payload);
+    } catch (error) {
+      console.error("Error searching products:", error);
+    }
+  };
 
   const handleSubmit = async () => {
     try {
@@ -107,12 +123,43 @@ const Booking = () => {
         }
       );
       console.log("««««« response.data.payload »»»»»", response.data.payload);
-      alert("Đặt lịch thành công");
+      navigate(`/bookingSuccess`);
     } catch (error) {
       alert("Đã có lỗi")
       console.error("Error searching products:", error);
     }
   };
+
+  const handleSubmitUpdate = async (idUpdate) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:3333/users/${idUpdate}`,
+        {
+          firstName,
+          lastName,
+          email,
+          address,
+          phoneNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setShow(false);
+      getPatient();
+      console.log("Response from server:", response.data);
+    } catch (error) {
+      console.error("Error:", error);
+      alert('Có lỗi thông tin muốn cập nhật')
+      setShow(false);
+    }
+  };
+
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
+
 
   const items = [
     {
@@ -138,11 +185,40 @@ const Booking = () => {
             <p>Địa chỉ:</p>
             <p>{patient.address}</p>
           </div>
-          <button className="update-infor-booking">Điều chỉnh</button>
+          <button className="update-infor-booking" onClick={() => handleShowModal(patient)}>Điều chỉnh</button>
+          <ChangeInfor
+              handleSubmitUpdate={() => {
+                handleSubmitUpdate(patient.id);
+              }}
+              show={show}
+              handleClose={handleClose}
+              firstName={firstName}
+              lastName={lastName}
+              phoneNumber={phoneNumber}
+              email={email}
+              address={address}
+              setEmail={setEmail}
+              setLastName={setLastName}
+              setPhoneNumber={setPhoneNumber}
+              setFirstName={setFirstName}
+              setAddress={setAddress}
+            />
         </div>
       ),
     },
   ];
+
+  const handleShowModal = (patient) => {
+      handleShow();
+      setFirstName(patient.firstName);
+      setLastName(patient.lastName);
+      setPhoneNumber(patient.phoneNumber);
+      setEmail(patient.email);
+      setAddress(patient.address);
+  };
+
+
+
 
   return (
     <>

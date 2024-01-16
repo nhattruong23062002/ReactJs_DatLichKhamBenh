@@ -40,7 +40,7 @@ export default (props) => {
   const getAllSelect = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3333/users/getall-doctor"
+        "http://localhost:3333/users/getall-doctor?name="
       );
       const response1 = await axios.get(
         "http://localhost:3333/allcode?type=PRICE"
@@ -52,10 +52,10 @@ export default (props) => {
         "http://localhost:3333/allcode?type=PROVINCE"
       );
       const response4 = await axios.get(
-        "http://localhost:3333/specialty"
+        "http://localhost:3333/specialty?name="
       );
       const response5 = await axios.get(
-        "http://localhost:3333/clinic"
+        "http://localhost:3333/clinic?name="
       );
       setDoctor(response.data.payload);
       setPrice(response1.data.payload);
@@ -131,7 +131,7 @@ export default (props) => {
     }
   };
   
-
+  console.log('««««« doctor »»»»»', doctor);
   const options = BuildDataInputSelect(doctor);
   const dataSelectPrice =  BuildDataInputSelect(price);
   const dataSelectPayment = BuildDataInputSelect(payment);

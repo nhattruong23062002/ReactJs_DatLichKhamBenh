@@ -1,61 +1,57 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import "../../../styles/mainAdmin.css";
-import axios from "axios";
-import { PiPencilSimpleLineFill } from "react-icons/pi";
-import { MdDeleteForever } from "react-icons/md";
-import UpdateUser from "./UpdateUser";
-import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import { FiPlusCircle } from "react-icons/fi";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { Button, Input, Space, Table } from "antd";
+import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
+import axios from "axios";
+import { PiPencilSimpleLineFill } from "react-icons/pi";
+import { MdDeleteForever } from "react-icons/md";
+import UpdateSpecialty from "./UpdateSpecialty";
 
-const UserManager = () => {
-  const [user, setUser] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [gender, setGender] = useState("");
-  const [roleId, setRole] = useState("");
-  const [positionId, setPosition] = useState("");
+const SpecialtyManager = () => {
+  const [name, setName] = useState("");
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [show, setShow] = useState(false);
-
   const searchInput = useRef(null);
+  const [specialty, setSpecialty] = useState("");
+  const [show, setShow] = useState(false);
 
   const token = getTokenFromLocalStorage();
 
-  const getAllUser = async () => {
+  const getAllSpecialty = async () => {
     try {
-      const response = await axios.get("http://localhost:3333/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setUser(response.data.payload);
+      const response = await axios.get(
+        "http://localhost:3333/specialty?name=",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setSpecialty(response.data.payload);
     } catch (error) {
-      console.error("Error searching products:", error);
+      console.error("Error:", error);
     }
   };
 
   useEffect(() => {
-    getAllUser();
+    getAllSpecialty();
   }, []);
-
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
+  
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -161,90 +157,54 @@ const UserManager = () => {
 
   const columns = [
     {
-      title: "FirstName",
-      dataIndex: "firstName",
-      key: "firstName",
-      ...getColumnSearchProps("firstName"),
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      width: "30%",
+      ...getColumnSearchProps("name"),
     },
     {
-      title: "LastName",
-      dataIndex: "lastName",
-      key: "lastName",
-      ...getColumnSearchProps("lastName"),
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-      ...getColumnSearchProps("email"),
-      sorter: (a, b) => a.address.length - b.address.length,
-      sortDirections: ["descend", "ascend"],
-    },
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-      ...getColumnSearchProps("address"),
-      sorter: (a, b) => a.address.length - b.address.length,
-      sortDirections: ["descend", "ascend"],
-    },
-    {
-      title: "PhoneNumber",
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
-      ...getColumnSearchProps("phoneNumber"),
-      sorter: (a, b) => a.address.length - b.address.length,
-      sortDirections: ["descend", "ascend"],
+      title: "Image",
+      key: "image",
+      render: (text, record) => (
+        <div>
+          {record && record.image ? (
+            <img
+              src={`http://localhost:3333/${record.image}`}
+              alt="error"
+              style={{ width: "100px" }}
+            />
+          ) : (
+            <span>No Image</span>
+          )}
+        </div>
+      ),
     },
     {
       title: "Action",
       key: "action",
-      width: "15%",
+      width: "20%",
       render: (text, record) => (
         <span>
           <a>
-            <PiPencilSimpleLineFill className="icon-update" 
-             onClick={() => {
-              handleShow();
-              setFirstName(record.firstName);
-              setLastName(record.lastName);
-              setPhoneNumber(record.phoneNumber);
-              setEmail(record.email);
-              setAddress(record.address);
-              setRole(record.roleId);
-              setGender(record.gender);
-              setPosition(record.positionId);
-            }}
+            <PiPencilSimpleLineFill
+              className="icon-update"
+              onClick={() => {
+                handleShow();
+                setName(record.name);
+              }}
             />
-            <UpdateUser
+            <UpdateSpecialty
+              show={show}
+              handleClose={handleClose}
+              name={name}
+              setName={setName}
               handleSubmitUpdate={() => {
                 handleSubmitUpdate(record.id);
               }}
-              show={show}
-              handleClose={handleClose}
-              firstName={firstName}
-              lastName={lastName}
-              phoneNumber={phoneNumber}
-              email={email}
-              address={address}
-              roleId={roleId}
-              gender={gender}
-              positionId={positionId}
-              setEmail={setEmail}
-              setLastName={setLastName}
-              setPhoneNumber={setPhoneNumber}
-              setFirstName={setFirstName}
-              setAddress={setAddress}
-              handleRoleChange={handleRoleChange}
-              handleGenderChange={handleGenderChange}
-              handlePositionChange={handlePositionChange}
             />
           </a>
-          <a
-            onClick={() => {
-              handleDeleteUser(record.id);
-            }}
-          >
+          <a onClick={() => handleDelete(record.id)}>
             <MdDeleteForever className="icon-delete" />
           </a>
         </span>
@@ -252,37 +212,29 @@ const UserManager = () => {
     },
   ];
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-
-  const handleDeleteUser = async (id) => {
+  const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:3333/users/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.delete(
+        `http://localhost:3333/specialty/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      getAllSpecialty();
       alert("Đã xóa thành công");
-      getAllUser();
     } catch (error) {
       console.error("Error searching products:", error);
     }
   };
 
-  const handleSubmitUpdate = async (idUpdate) => {
+  const handleSubmitUpdate = async (id) => {
     try {
       const response = await axios.patch(
-        `http://localhost:3333/users/${idUpdate}`,
+        `http://localhost:3333/specialty/${id}`,
         {
-          firstName,
-          lastName,
-          email,
-          address,
-          phoneNumber,
-          gender: gender,
-          positionId: positionId,
-          roleId: roleId,
+          name,
         },
         {
           headers: {
@@ -291,40 +243,15 @@ const UserManager = () => {
         }
       );
       setShow(false);
-      getAllUser();
+      getAllSpecialty();
       console.log("Response from server:", response.data);
     } catch (error) {
       console.error("Error:", error);
-      alert('Có lỗi thông tin muốn cập nhật')
-      setShow(false);
     }
   };
 
-  useEffect(() => {
-    const $ = window.$;
-    const DataTable = window.DataTable;
-    // Khởi tạo DataTables
-    $("#example").DataTable();
-    // Đảm bảo DataTables sẽ được giải phóng khi component bị hủy
-    return () => {
-      $("#example").DataTable().destroy();
-    };
-  }, []);
-
-  const handleGenderChange = (e) => {
-    const selectedGender = e.target.value;
-    setGender(selectedGender);
-  };
-
-  const handleRoleChange = (e) => {
-    const selectedRole = e.target.value;
-    setRole(selectedRole);
-  };
-
-  const handlePositionChange = (e) => {
-    const selectedPosition = e.target.value;
-    setPosition(selectedPosition);
-  };
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   return (
     <main className="app-content">
@@ -332,7 +259,7 @@ const UserManager = () => {
         <ul className="app-breadcrumb breadcrumb side">
           <li className="breadcrumb-item active">
             <a href="#">
-              <b>Danh sách User</b>
+              <b>Danh sách chuyên khoa</b>
             </a>
           </li>
         </ul>
@@ -345,13 +272,16 @@ const UserManager = () => {
             <div className="tile-body">
               <div className="row element-button">
                 <div className="add-user">
-                  <NavLink to="/admin/user-manage/addUser" className="active1">
+                  <NavLink
+                    to="/admin/specialty-manager/addSpecialty"
+                    className="active1"
+                  >
                     <FiPlusCircle style={{ marginRight: "5px" }} />
-                    Tạo mới User
+                    Tạo mới chuyên khoa
                   </NavLink>
                 </div>
                 <div className="table-data">
-                  <Table columns={columns} dataSource={user} />;
+                  <Table columns={columns} dataSource={specialty} />;
                 </div>
               </div>
             </div>
@@ -362,4 +292,4 @@ const UserManager = () => {
   );
 };
 
-export default UserManager;
+export default SpecialtyManager;

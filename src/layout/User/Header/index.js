@@ -43,11 +43,25 @@ const Header = () => {
   const handleLogin = async () => {
     navigate("/login");
   };
+
+  const handleChangePassword = async () => {
+    navigate("/changePassword");
+  };
+
+  const handleDirect = async () => {
+    navigate("/profile");
+  };
+
   const handleLogout = () => {
     if (role === 'R3') {
       removeTokenFromLocalStorage();
       window.location.reload();
     }
+  };
+
+  const handleImageError = (event) => {
+    // Thay đổi nguồn ảnh khi xảy ra lỗi
+    event.target.src = 'https://banner2.cleanpng.com/20180514/gre/kisspng-computer-icons-avatar-user-profile-clip-art-5af95fab3b2d13.0220186015262923952424.jpg';
   };
 
   return (
@@ -56,7 +70,7 @@ const Header = () => {
         <div className="left-content">
           <FiMenu className="menu-homepage" />
           <div className="header-logo">
-            <img src="https://webadmin.beeart.vn/upload/image/20220519/6378855412618721664506097.png"/>
+            <img src="https://png.pngtree.com/png-clipart/20230823/original/pngtree-medical-logo-template-vector-illustration-picture-image_8251825.png"/>
           </div>
         </div>
         <div className="center-content">
@@ -92,11 +106,16 @@ const Header = () => {
           </div>
           {role === "R3" ? (
             <div className="has-dropdown">
-                <img className="avatar" src={`http://localhost:3333/${doctor.image}`} />
+                <img className="avatar" src={`http://localhost:3333/${doctor.image}`} onError={handleImageError} />
                 <ul className="sub-menu">
                     <li>
-                      <p>
+                      <p onClick={handleDirect}>
                         Tài khoản của tôi
+                      </p>
+                    </li>
+                    <li>
+                      <p onClick={handleChangePassword}>
+                        Đổi mật khẩu
                       </p>
                     </li>
                     <li>

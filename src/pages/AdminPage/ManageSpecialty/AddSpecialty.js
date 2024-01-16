@@ -103,7 +103,7 @@ const AddSpecialty = () => {
   return (
     <>
       <h2 className="doctor-title">Thêm Chuyên Khoa </h2>
-      <form className="row">
+      <form className="row" onSubmit={handleSubmit}>
         <div className="form-group col-md-6">
           <label className="control-label" >Tên chuyên khoa</label>
           <input className="form-control" type="text" required value={nameSpecialty} onChange={(e) => setNameSpecialty(e.target.value)}/>
@@ -112,16 +112,16 @@ const AddSpecialty = () => {
           <label className="control-label">Ảnh chuyên khoa</label>
           <input className="form-control" type="file" required accept="image/*" onChange={handleAvatarChange}/>
         </div>
-      </form>
       <MdEditor
         style={{ height: "500px", marginTop: "20px" }}
         renderHTML={(text) => mdParser.render(text)}
         value={contentHTML}
         onChange={handleEditorChange}
-      />
-        <button className="btn-manageDoctor" onClick={handleSubmit}>
+        />
+        <button className="form-group col-md-1 btn-manageDoctor" type="submit">
           Lưu lại
         </button>
+      </form>
     </>
   );
 };

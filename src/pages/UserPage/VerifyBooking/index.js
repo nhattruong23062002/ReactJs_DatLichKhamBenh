@@ -12,8 +12,6 @@ const VerifyBooking = () => {
         const token = params.get("token");
         const doctorId = params.get("doctorId");
 
-        console.log('««««« token »»»»»', token);
-        console.log('««««« doctorId »»»»»', doctorId);
         if (token && doctorId) {
           const response = await axios.post(
             `http://localhost:3333/booking/verify-book-appointment`,
@@ -33,7 +31,7 @@ const VerifyBooking = () => {
 
     getVerify(); // Call the function here
   }, []);
-  console.log('««««« notice »»»»»', notice);
+
   return (
     <div style={{textAlign:"center", minHeight:"800px"}}>
       {notice  &&  (

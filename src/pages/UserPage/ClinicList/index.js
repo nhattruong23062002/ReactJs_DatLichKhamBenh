@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Input } from "antd";
+import { IoMdArrowRoundBack } from "react-icons/io";
+
 
 const ClinicList = () => {
   const [clinics, setClinics] = useState("");
@@ -26,9 +28,15 @@ const ClinicList = () => {
     navigate(`/detail-Clinic/${id}`);
   };
 
+  const handleClickBack = async (id) => {
+    navigate(`/`);
+  };
+
   return (
     <div className="specialty-list container">
-      <div className="specialty-list-top"></div>
+      <div className="specialty-list-top">
+      <span className="icon-back" onClick={handleClickBack}><IoMdArrowRoundBack/></span>
+      </div>
       <div className="specialty-list-content">
         <div className="specialty-list-heading">
           <h4>Danh sách phòng khám</h4>

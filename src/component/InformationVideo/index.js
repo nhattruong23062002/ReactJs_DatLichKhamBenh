@@ -3,7 +3,7 @@ import "./InformationVideo.scss"
 const InformationVideo = () => {
   return (
     <div className="wrapper container">
-        <h2>Truyền thông nói gì về BookingCare</h2>
+        <h2>Truyền thông nói gì về HealthCare</h2>
         <div className="wrapper-content">
         <iframe
             width="560"

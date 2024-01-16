@@ -15,6 +15,8 @@ const AddUser = () => {
   const [positionId, setPosition] = useState("");
   const [tempAvatarFile, setTempAvatarFile] = useState(null);
   const [fileName, setFileName] = useState(null);
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = useState("");
 
   const token = getTokenFromLocalStorage();
 
@@ -53,10 +55,10 @@ const AddUser = () => {
     }
   };
 
-  const handleAvatarChange = async(e) => {
+  const handleAvatarChange = async (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
-  
+
     reader.onloadend = () => {
       // Lấy đường dẫn base64 của ảnh đã chọn
       const base64Image = reader.result;
@@ -66,7 +68,7 @@ const AddUser = () => {
       const imgElement = document.getElementById("avatarImg");
       imgElement.src = base64Image;
     };
-  
+
     if (file) {
       reader.readAsDataURL(file);
     }
@@ -100,44 +102,62 @@ const AddUser = () => {
     try {
       console.log('««««« fileName »»»»»', fileName);
       if (fileName) {
-        const response = await axios.post("http://localhost:3333/users",    
-        {
-          firstName,
-          lastName,
-          email,
-          address,
-          phoneNumber,
-          gender: mapGenderToValue(gender),
-          positionId: mapRolePosition(positionId),
-          password,
-          image: `${fileName}`,
-          roleId: mapRoleToValue(roleId),
-        },{
+        const response = await axios.post("http://localhost:3333/users",
+          {
+            firstName,
+            lastName,
+            email,
+            address,
+            phoneNumber,
+            gender: mapGenderToValue(gender),
+            positionId: mapRolePosition(positionId),
+            password,
+            image: `${fileName}`,
+            roleId: mapRoleToValue(roleId),
+          }, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-  
+
         alert("Thêm mới thành công");
         console.log("Response from server:", response.data);
+        return true;
       } else {
         console.error("fileName is not updated.");
       }
     } catch (error) {
-      alert("Thêm mới thất bại");
-      console.error("Error logging in:", error);
-    }
+        const errors = error.response.data.error.errors[0];
+        console.log('««««« errors »»»»»', errors);
+        if (errors.path === "email" || error.path === 'email_2') {
+          setEmailErrorMessage(errors.message);
+        } else if (errors.path === "phoneNumber" || error.path === "phoneNumber_2") {
+          setPhoneNumberErrorMessage(errors.message);
+      }
+      return false;
+    } 
   };
 
   useEffect(() => {
     if (fileName) {
-      postOtherInfo();
-      setFirstName("")
-      setLastName("")
-      setEmail ("")
-      setAddress("")
-      setPhoneNumber("")
-      setPassword("")
+      // Call the postOtherInfo function
+      postOtherInfo()
+        .then((isPostSuccessful) => {
+          // Check if the post was successful before resetting the state
+          console.log('««««« isPostSuccessful »»»»»', isPostSuccessful);
+          if (isPostSuccessful) {
+            setFirstName("");
+            setLastName("");
+            setEmail("");
+            setAddress("");
+            setPhoneNumber("");
+            setPassword("");
+          }
+        })
+        .catch((error) => {
+          // Handle any errors here
+          console.error("Error:", error.message);
+        });
     }
   }, [fileName]);
 
@@ -146,14 +166,14 @@ const AddUser = () => {
     async (e) => {
       e.preventDefault();
       try {
-        await handleUploadAvatar(); 
+        await handleUploadAvatar();
       } catch (error) {
         console.error("Error in handleSubmit:", error);
       }
     },
     [firstName, lastName, email, address, phoneNumber, password, gender, roleId, positionId, tempAvatarFile]
   );
-  
+
 
   return (
     <main className="app-content">
@@ -200,8 +220,16 @@ const AddUser = () => {
                     type="text"
                     required
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmailErrorMessage(null);
+                      setEmail(e.target.value);
+                    }}
                   />
+                  {emailErrorMessage && (
+                    <p style={{ color: "red", fontSize: "12px", marginTop: "5px" }}>
+                      {emailErrorMessage}
+                    </p>
+                  )}
                 </div>
                 <div className="form-group col-md-4">
                   <label className="control-label">Địa chỉ thường trú</label>
@@ -220,8 +248,16 @@ const AddUser = () => {
                     type="number"
                     required
                     value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    onChange={(e) => {
+                      setPhoneNumberErrorMessage(null);
+                      setPhoneNumber(e.target.value);
+                    }}
                   />
+                  {phoneNumberErrorMessage && (
+                    <p style={{ color: "red", fontSize: "12px", marginTop: "5px" }}>
+                      {phoneNumberErrorMessage}
+                    </p>
+                  )}
                 </div>
                 <div className="form-group col-md-4">
                   <label className="control-label">Mật khẩu</label>
@@ -258,7 +294,7 @@ const AddUser = () => {
                     onChange={(e) => setRole(e.target.value)}
                   >
                     <option>-- Chọn vai trò --</option>
-                    <option>Quản trị Viên</option>
+                    <option>Quản trị viên</option>
                     <option>Bác sĩ</option>
                     <option>Bệnh nhân</option>
                   </select>
@@ -284,19 +320,19 @@ const AddUser = () => {
                 </div>
                 <div className="form-group  col-md-12">
                   <div className="wrapper-upload">
-                  <img
-                    id="avatarImg"
-                    src={ ``}
-                    alt="Chọn ảnh"
-                  />
-                  <input
-                    style={{fontSize:"12px"}}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleAvatarChange}
-                  />
+                    <img
+                      id="avatarImg"
+                      src={``}
+                      alt="Chọn ảnh"
+                    />
+                    <input
+                      style={{ fontSize: "12px" }}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarChange}
+                    />
                   </div>
-              </div>
+                </div>
                 <div className="btn-addUser">
                   <button className="btn btn-info" type="submit">
                     Lưu lại

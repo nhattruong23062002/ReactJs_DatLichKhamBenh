@@ -106,7 +106,7 @@ const AddClinic = () => {
   return (
     <>
       <h2 className="doctor-title">Thêm Phòng Khám</h2>
-      <form className="row">
+      <form className="row" onSubmit={handleSubmit}>
         <div className="form-group col-md-6">
           <label className="control-label" >Tên phòng khám</label>
           <input className="form-control" type="text" required value={nameClinic} onChange={(e) => setNameClinic(e.target.value)}/>
@@ -119,16 +119,17 @@ const AddClinic = () => {
           <label className="control-label" >Địa chỉ phòng khám</label>
           <input className="form-control" type="text" required value={addressClinic} onChange={(e) => setAddressClinic(e.target.value)}/>
         </div>
-      </form>
-      <MdEditor
-        style={{ height: "500px", marginTop: "20px" }}
-        renderHTML={(text) => mdParser.render(text)}
-        value={contentHTML}
-        onChange={handleEditorChange}
-      />
-        <button className="btn-manageDoctor" onClick={handleSubmit}>
+        <MdEditor
+          className="form-group col-md-12"
+          style={{ height: "500px", marginTop: "20px" }}
+          renderHTML={(text) => mdParser.render(text)}
+          value={contentHTML}
+          onChange={handleEditorChange}
+        />
+        <button className="form-group col-md-1 btn-manageDoctor" type="submit">
           Lưu lại
         </button>
+      </form>
     </>
   );
 };

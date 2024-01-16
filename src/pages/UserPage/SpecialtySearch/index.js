@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation ,useNavigate } from "react-router-dom";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 
 const SpecialtySearch = () => {
@@ -27,11 +28,17 @@ const SpecialtySearch = () => {
     navigate(`/detail-specialty/${id}`);
   };
 
+  const handleClickBack = async (id) => {
+    navigate(`/`);
+  };
+
   return (
     <div className="specialty-list container">
-      <div className="specialty-list-top"></div>
+      <div className="specialty-list-top">
+      <span className="icon-back" onClick={handleClickBack}><IoMdArrowRoundBack/></span>
+      </div>
       <div className="specialty-list-content">
-        <h4 style={{ marginTop: "30px" }}>Kết quả tìm kiếm</h4>
+        <h4 style={{ marginTop: "10px" }}>Kết quả tìm kiếm</h4>
         {specialty &&
           specialty.map((item) => (
             <div

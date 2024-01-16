@@ -40,7 +40,7 @@ const ManageSchedule = () => {
   const getAllDoctor = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3333/users/getall-doctor"
+        "http://localhost:3333/users/getall-doctor?name="
       );
       setDoctor(response.data.payload);
     } catch (error) {

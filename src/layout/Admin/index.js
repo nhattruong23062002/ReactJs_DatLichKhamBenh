@@ -3,13 +3,21 @@ import { Outlet,Link, } from 'react-router-dom';
 import "../../styles/sidebarAdmin.css";
 import SideBar from "../../component/SidebarAdmin";
 import { FiMenu } from "react-icons/fi";
-import { getTokenFromLocalStorage } from "../../utils/tokenUtils";
+import { getTokenFromLocalStorage,getIdUser,removeTokenFromLocalStorage } from "../../utils/tokenUtils";
 import jwt_decode from "jwt-decode";
 import SideBarDoctor from "../../component/SidebarDoctor";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 
 const LayoutAdmin = () => {
   const [role, setRole] = useState('');
+  const [id, setId] = useState("");
+  const [user, setUser] = useState("");
+  const navigate = useNavigate();
+  const IdUser = getIdUser();
+
+
   
   useEffect(() => {
     const token = getTokenFromLocalStorage();
@@ -18,15 +26,31 @@ const LayoutAdmin = () => {
       try {
         // Giải mã token để lấy thông tin customerId
         const decodedToken = jwt_decode(token);
-        const { roleId : roleId } = decodedToken;
-        console.log('««««« roleId »»»»»', roleId);
+        const { roleId : roleId, id: id } = decodedToken;
         setRole(roleId);
+        setId(id);
       } catch (error) {
         console.error("Error decoding token:", error);
       }
     }
   }, []);
 
+  useEffect(() => {
+      const getUser = async () => {
+        try {
+          const response = await axios.get(`http://localhost:3333/users/${IdUser}`);
+          setUser(response.data.payload);
+        } catch (error) {
+          console.error("Error searching products:", error);
+        }
+      };
+      getUser();
+  }, []);
+
+  const handleLogout = () => {
+    navigate("/login");
+    removeTokenFromLocalStorage();
+  };
 
   return (
     <>
@@ -48,15 +72,17 @@ const LayoutAdmin = () => {
             </h4>
             <div className="user-wrapper">
               <div className="btn-group">
-                <button type="button" className="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                </button>
-                <ul className="dropdown-menu">
-                 {/*  <li><Link className="dropdown-item" to="#">Profile</Link></li>
-                  <li><Link className="dropdown-item" to="#">Another action</Link></li>
-                  <li><hr className="dropdown-divider" /></li>
-                  <li><Link className="dropdown-item" to="/">Logout</Link></li> */}
-                </ul>
-              </div>
+              <div className="has-dropdown">
+                <img className="avatar" src={`http://localhost:3333/${user.image}`} />
+                <ul className="sub-menu">
+                    <li>
+                      <p onClick={handleLogout}>
+                        Đăng xuất
+                      </p>
+                    </li>
+                  </ul>
+            </div>
+            </div>
             </div>
           </header>
             <main>

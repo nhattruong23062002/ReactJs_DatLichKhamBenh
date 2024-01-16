@@ -155,10 +155,6 @@ th {
   text-align: inherit;
 }
 
-
-
-
-
 .table {
   width: 100%;
   max-width: 100%;
@@ -890,4 +886,38 @@ fieldset:disabled a.btn {
 }
 .invoice-confirm p{
   margin-bottom: 10px;
+}
+.table-data table tr{
+  font-size: 16px;
+}
+
+.table-data table td{
+  font-size: 16px;
+}
+
+/* navigation manage patient */
+
+/* Reset some default styles */
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+/* Style for the navigation bar */
+.wrap-navigation {
+}
+
+
+.nav-list li {
+  padding: 6px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  border-right: 1px solid #ccc;
+}
+
+/* Active item style */
+.nav-list li.active {
+  color: #0ba1ec;
 }
